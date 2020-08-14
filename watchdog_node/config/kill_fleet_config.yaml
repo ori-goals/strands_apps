@@ -1,0 +1,10 @@
+- name: Kill Fleet Watchdog
+  description: Monitors robot status and /kill_fleet topic and kills fleet.
+  restart_timeout: 0
+  monitors:
+    - monitor_type: TopicPublished
+      topic: /kill_fleet
+    - monitor_type: BadRobot
+      # TODO: Fill in here!
+  actions:
+    - action_type: KillFleet
