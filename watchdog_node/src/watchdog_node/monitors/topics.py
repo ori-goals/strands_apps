@@ -1,4 +1,5 @@
 from . import MonitorType
+from rospy.msg import AnyMsg
 from threading import Timer
 import rospy
 import rostopic
@@ -116,7 +117,19 @@ class TopicPublished(MonitorType):
     
     def topic_cb(self, msg):
         self.set_invalid()
-        
+
+
+class TopicPublishedAnyType(TopicPublished):
+    name = "TopicPublishedAnyType"
+    description =  ("This monitor triggers the actions if a message " +
+                    "is published on a given topic. The message type is " +
+                    "treated as irrelevant")
+    config_keys = [('topic', "The topic to listen to")]
+
+    def start(self):
+        self._retry_timer = None
+        self._topic_sub = rospy.Subscriber(self.topic, AnyMsg, self.topic_cb)
+
     
 class TopicFieldCondition(MonitorType):
     name = "TopicFieldCondition"
