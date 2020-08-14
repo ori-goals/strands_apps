@@ -4,5 +4,11 @@
   monitors:
     - monitor_type: TopicPublishedAnyType
       topic: /kill_fleet
+    - monitor_type: RobotDown
+      topic: /front/scan
+      max_duration: 1
+    - monitor_type: RobotDown
+      topic: /odometry/filtered
+      max_duration: 1
   actions:
     - action_type: KillFleet

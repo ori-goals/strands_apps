@@ -1,2 +1,3 @@
 from base_monitor import MonitorType
+import robot_down_monitor
 import topics
