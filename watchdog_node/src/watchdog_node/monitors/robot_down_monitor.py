@@ -76,7 +76,7 @@ class RobotDown(MonitorType):
                 self._topic_subs[robot].unregister()
             if (robot in self._retry_timers and 
                 self._retry_timers[robot] is not None):
-                self._retry_timers[robot].cacnel()
+                self._retry_timers[robot].cancel()
             if (robot in self._validity_timers and 
                 self._validity_timers[robot] is not None):
                 self._validity_timers[robot].cancel()
