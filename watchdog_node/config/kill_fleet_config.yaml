@@ -6,9 +6,11 @@
       topic: /kill_fleet
     - monitor_type: RobotDown
       topic: /front/scan
-      max_duration: 1
+      max_duration: 10
+      num_robots: 5
     - monitor_type: RobotDown
       topic: /odometry/filtered
-      max_duration: 1
+      max_duration: 10
+      num_robots: 5
   actions:
     - action_type: KillFleet

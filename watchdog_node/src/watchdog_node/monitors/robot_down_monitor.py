@@ -27,13 +27,22 @@ class RobotDown(MonitorType):
     def __init__(self, monitor_config, invalid_cb):
         super(RobotDown, self).__init__(monitor_config, invalid_cb)
         self.max_duration = rospy.Duration(self.max_duration)
-        self.robot_ids = get_robot_ids()
+
+        self.robot_ids = []
+        while len(self.robot_ids) != self.num_robots:
+            self.robot_ids = get_robot_ids()
+            rospy.loginfo('Detected ' + str(len(self.robot_ids)) + 
+                          ' robots: ' + str(self.robot_ids) + '...')
+            rospy.sleep(1)
+
         self.topics = {}
         for robot in self.robot_ids:
             self.topics[robot] = '/' + robot
             self.topics[robot] += '/' if self.topic[0] != '/' else ''
             self.topics[robot] += self.topic
-            
+        
+        rospy.loginfo("Listening to each robot's " + str(self.topic) + 
+                      " topic...")
 
     def _init_robot(self, robot):
         """ Initialises single robot. """
@@ -68,6 +77,9 @@ class RobotDown(MonitorType):
         for robot in self.robot_ids:
             self._init_robot(robot)
         
+        rospy.loginfo('Starting RobotDown monitor on ' + str(self.topic) + 
+                      ' topic for each robot...')
+        
 
     def stop(self):
         for robot in self.robot_ids:
@@ -89,7 +101,7 @@ class RobotDown(MonitorType):
     def timeout_cb(self, robot):
         duration = rospy.Time.now() - self._last_times[robot]
         if duration > self.max_duration:
-            rospy.logwarn("No message reveived on " + str(self.topics[robot]) +
+            rospy.logwarn("No message received on " + str(self.topics[robot]) +
                           " for " + str(duration.to_sec()) + "s.")
             self.set_invalid()
         else:

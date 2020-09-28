@@ -43,6 +43,10 @@ class KillFleet(ActionType):
 
         e_stop_topics = self._get_e_stop_topics()
 
+        rospy.loginfo("Killing " + str(len(e_stop_topics)) + ' robots')
+        rospy.loginfo("Sending kill commands to the following robot topics: " 
+                      + str(e_stop_topics) + '...')
+
         for topic in e_stop_topics:
             # Publish to activate e_stop (value doesn't matter)
             pub = rospy.Publisher(topic, Bool, queue_size=5, latch=True)
