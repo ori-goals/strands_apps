@@ -12,7 +12,9 @@ from watchdog_node.fleet_watchdog_utils import get_robot_ids
 from . import MonitorType
 from threading import Timer
 import rostopic
+import signal
 import rospy
+import sys
 
 class RobotDown(MonitorType):
     name = "RobotDown"
@@ -27,6 +29,8 @@ class RobotDown(MonitorType):
     def __init__(self, monitor_config, invalid_cb):
         super(RobotDown, self).__init__(monitor_config, invalid_cb)
         self.max_duration = rospy.Duration(self.max_duration)
+
+        signal.signal(signal.SIGINT, self._signal_handler)
 
         self.robot_ids = []
         while len(self.robot_ids) != self.num_robots:
@@ -43,6 +47,11 @@ class RobotDown(MonitorType):
         
         rospy.loginfo("Listening to each robot's " + str(self.topic) + 
                       " topic...")
+
+    def _signal_handler(self, sig, frame):
+        if sig == signal.SIGINT:
+            rospy.logwarn("SIGINT received, shutting down...")
+            sys.exit(0)
 
     def _init_robot(self, robot):
         """ Initialises single robot. """
